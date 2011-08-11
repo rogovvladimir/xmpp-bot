@@ -22,14 +22,14 @@ import mycommands
 import myparser
 
 class XMPPClientConnector(SRVConnector):
-"""Pre-connect initialization for client connector""""
+    """Pre-connect initialization for client connector"""
     def __init__(self, reactor, domain, factory, port):
         self.port = port
         SRVConnector.__init__(self, reactor, 'xmpp-client', 
                               domain, factory)
         
 class ForumMessage(Message):
-"""class describes handler for <chat> type stanzas"""
+    """class describes handler for <chat> type stanzas"""
     def chatHandler(self):
         body = self.body
         if body is None:
@@ -46,10 +46,10 @@ class ForumMessage(Message):
 
 
 class Client(object):
-"""main class for client to server connection"""
+    """main class for client to server connection"""
 
     def __init__(self, reactor, client_jid, server, secret, port):
-    """Setup handler and connect to server"""
+        """Setup handler and connect to server"""
         self.reactor = reactor
         self.client_jid = client_jid
 
@@ -146,15 +146,15 @@ class Client(object):
         pass
         
     def onUnvailable(self, sender, item, presence):
-         """roster.resourse_unavailable handler."""
+        """roster.resourse_unavailable handler."""
         pass
 
     def onRosterGot(self, sender):
-         """roster.roster_got handler."""
+        """roster.roster_got handler."""
         pass
 
     def onSubscribe(self, sender, presence):
-         """roster.subscribe handler."""
+        """roster.subscribe handler."""
         presence.type_ = 'subscribed'
         presence.to = presence.from_
         presence.from_ = None
