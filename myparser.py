@@ -1,7 +1,7 @@
 import re
 
 PTRN = r'''
-            ([a-z]+)    # command part
+            ^([a-z]+)$    # command part
         '''
 
 REGEXP = re.compile(PTRN, re.VERBOSE)

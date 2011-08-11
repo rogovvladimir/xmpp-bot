@@ -37,5 +37,6 @@ def timeHandler():
     
 @command('commands')
 def commandsHandler():
-    body = 'There are :\n[%s]\n commands, supported by this bot' % ',\n'.join([cmd for cmd in commands])
+    body = 'There are :\n[%s]\n commands, supported by this bot' \
+           % ',\n'.join([cmd for cmd in commands])
     return body

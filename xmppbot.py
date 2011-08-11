@@ -1,5 +1,5 @@
 """
-Modules is an example of simple chat bot for any xmpp-server
+Module is an example of simple chat bot for any xmpp-server
 """
 
 import twisted.words.protocols.jabber.client as twisted_client
@@ -20,6 +20,8 @@ from twilix.roster import Roster
 #modules with available commands for bot and command-parser 
 import mycommands
 import myparser
+
+import ConfigParser
 
 class XMPPClientConnector(SRVConnector):
     """Pre-connect initialization for client connector"""
@@ -162,6 +164,15 @@ class Client(object):
         self.dispatcher.send(presence)
         
 #connection to server
-cl = Client(reactor, internJID('testbottest@jabber.ru/bot'), 
-          'jabber.ru', 'mitrofan', 8881)
+
+config = ConfigParser.ConfigParser()
+config.read('xmppbot.conf')
+
+jid = config.get('connect', 'jid')
+host = config.get('connect', 'host')
+password = config.get('connect', 'password')
+port = config.get('connect', 'port')
+
+cl = Client(reactor, internJID(jid), 
+            host, password, port)
 reactor.run()
