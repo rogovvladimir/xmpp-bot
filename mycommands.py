@@ -34,3 +34,8 @@ def rollHandler():
 def timeHandler():
     body = time.strftime("%a, %d %b %Y, %H:%M:%S", time.localtime())
     return body
+    
+@command('commands')
+def commandsHandler():
+    body = 'There are :\n[%s]\n commands, supported by this bot' % ',\n'.join([cmd for cmd in commands])
+    return body

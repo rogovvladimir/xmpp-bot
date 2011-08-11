@@ -28,23 +28,21 @@ class XMPPClientConnector(SRVConnector):
         SRVConnector.__init__(self, reactor, 'xmpp-client', 
                               domain, factory)
         
-class ForumMessage(Message):
+class ChatMessage(Message):
     """class describes handler for <chat> type stanzas"""
+    def clean_body(self, value):
+        cmd = myparser.parsingCommand(value)
+        if cmd not in mycommands.commands:
+            raise WrongElement
+        return cmd
+    
     def chatHandler(self):
-        body = self.body
-        if body is None:
-            return
-        cmd = myparser.parsingCommand(body)
-        try:
-            message = Message(from_=self.to,
-                              to=self.from_,
-                              type_=self.type_,
-                              body=mycommands.commands[cmd]())
-            self.host.dispatcher.send(message)
-        except:
-            pass
-
-
+        message = Message(from_=self.to,
+                          to=self.from_,
+                          type_=self.type_,
+                          body=mycommands.commands[self.body]())
+        return message
+    
 class Client(object):
     """main class for client to server connection"""
 
@@ -108,7 +106,7 @@ class Client(object):
         """
         
         self.dispatcher = Dispatcher(xs, self.client_jid)
-        self.dispatcher.registerHandler((ForumMessage, self))
+        self.dispatcher.registerHandler((ChatMessage, self))
         
         self.disco = Disco(self.dispatcher)
         self.disco.init()
@@ -117,7 +115,8 @@ class Client(object):
         self.roster = Roster(self.dispatcher, p)
         self.roster.init()
         
-        self.version = ClientVersion(self.dispatcher, 'simple chat bot',
+        self.version = ClientVersion(self.dispatcher, 
+                                     "Xmppbot Prime. Optimus's brother",
                                      '0.1', 'Linux')
         self.version.init(self.disco)
         
@@ -163,6 +162,6 @@ class Client(object):
         self.dispatcher.send(presence)
         
 #connection to server
-c= Client(reactor, internJID('testbottest@jabber.ru/bot'), 
+cl = Client(reactor, internJID('testbottest@jabber.ru/bot'), 
           'jabber.ru', 'mitrofan', 8881)
 reactor.run()
