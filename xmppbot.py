@@ -18,10 +18,11 @@ from twilix.disco import Disco
 from twilix.roster import Roster
 
 #modules with available commands for bot and command-parser 
-import mycommands
-import myparser
+from plugins import mycommands
+from parser import myparser
 
 import ConfigParser
+from optparse import OptionParser
 
 class XMPPClientConnector(SRVConnector):
     """Pre-connect initialization for client connector"""
@@ -29,12 +30,12 @@ class XMPPClientConnector(SRVConnector):
         self.port = port
         SRVConnector.__init__(self, reactor, 'xmpp-client', 
                               domain, factory)
-        
+
 class ChatMessage(Message):
     """class describes handler for <chat> type stanzas"""
     def clean_body(self, value):
         cmd = myparser.parsingCommand(value)
-        if cmd not in mycommands.commands:
+        if cmd not in mycommands.cmdcatalog:
             raise WrongElement
         return cmd
     
@@ -42,7 +43,7 @@ class ChatMessage(Message):
         message = Message(from_=self.to,
                           to=self.from_,
                           type_=self.type_,
-                          body=mycommands.commands[self.body]())
+                          body=mycommands.cmdcatalog[self.body]())
         return message
     
 class Client(object):
@@ -119,7 +120,7 @@ class Client(object):
         
         self.version = ClientVersion(self.dispatcher, 
                                      "Xmppbot Prime. Optimus's brother",
-                                     '0.1', 'Linux')
+                                     'v%s' % version, 'Linux')
         self.version.init(self.disco)
         
         #set handlers for roster's signals
@@ -156,6 +157,7 @@ class Client(object):
 
     def onSubscribe(self, sender, presence):
         """roster.subscribe handler."""
+        
         presence.type_ = 'subscribed'
         presence.to = presence.from_
         presence.from_ = None
@@ -163,16 +165,31 @@ class Client(object):
         presence.type_ = 'subscribe'
         self.dispatcher.send(presence)
         
-#connection to server
 
+version = '0.1'
+configDefault = 'xmppbot.conf'
+
+#read command-line's params
+optparser = OptionParser(version="Xmpp bot version : %s"  % version)
+optparser.add_option('-c', 
+                     '--config', 
+                     metavar='FILE', 
+                     dest='configFile', 
+                     help="Read config from custom file")
+
+(options, args) = optparser.parse_args()
+configFile = options.configFile
+
+#load configuration settings
 config = ConfigParser.ConfigParser()
-config.read('xmppbot.conf')
+config.read(configFile if configFile else configDefault)
 
 jid = config.get('connect', 'jid')
 host = config.get('connect', 'host')
 password = config.get('connect', 'password')
 port = config.get('connect', 'port')
 
+#connection to server
 cl = Client(reactor, internJID(jid), 
             host, password, port)
 reactor.run()
