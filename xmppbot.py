@@ -87,10 +87,12 @@ class Client(object):
 
     def rawIn(self,data):
         """data is the input stanza"""
+        #print 'IN ', data
         pass
 
     def rawOut(self,data):
         """data is the output stanza"""
+        #print 'OUT ', data
         pass
 
     def onDisconnected(self, xs):
