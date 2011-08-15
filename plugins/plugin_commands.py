@@ -6,6 +6,6 @@ from .mycommands import cmdcatalog
 @command('commands')
 def commandsHandler(unused):
     cmdlist = [cmd for cmd in cmdcatalog]
-    return 'There are :\n[%s]\n commands, supported by this bot' \
-           % ',\n'.join(cmdlist)
+    return 'Hello:) There are :\n[%s]\nlist of commands, supported by this bot' \
+           % ', '.join(cmdlist)
 

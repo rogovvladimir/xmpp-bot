@@ -36,15 +36,19 @@ class ChatMessage(Message):
     def clean_body(self, value):
         cmd = myparser.parsingCommand(value)
         if cmd not in mycommands.cmdcatalog:
-            raise WrongElement
+            cmd = mycommands.help
         return cmd
     
     def chatHandler(self):
-        message = Message(from_=self.to,
-                          to=self.from_,
-                          type_=self.type_,
-                          body=mycommands.cmdcatalog[self.body](self))
-        return message
+        res = mycommands.cmdcatalog[self.body](self)
+        if isinstance(res, defer.Deferred):
+            return res
+        else:
+            message = Message(from_=self.to,
+                              to=self.from_,
+                              type_=self.type_,
+                              body=res)
+            return message
     
 class Client(object):
     """main class for client to server connection"""
@@ -87,12 +91,12 @@ class Client(object):
 
     def rawIn(self,data):
         """data is the input stanza"""
-        print 'IN ', data
+        #print 'IN ', data
         pass
 
     def rawOut(self,data):
         """data is the output stanza"""
-        print 'OUT ', data
+        #print 'OUT ', data
         pass
 
     def onDisconnected(self, xs):

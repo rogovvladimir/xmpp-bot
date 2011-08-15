@@ -1,5 +1,7 @@
 cmdcatalog = {}
 
+help = 'commands'
+
 class command(object):
     """An interface for addition elements in commands dictionary"""
     
@@ -14,3 +16,4 @@ class command(object):
         
         """
         cmdcatalog[self.name] = func
+

@@ -1,1 +1,1 @@
-print 'IMPORTED'
+print 'IMPORTED %s library' % __name__
