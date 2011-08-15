@@ -1,5 +1,5 @@
 from .mycommands import command
 
 @command('ping')
-def pingHandler():
+def pingHandler(unused):
     return 'pong'

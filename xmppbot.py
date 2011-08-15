@@ -43,7 +43,7 @@ class ChatMessage(Message):
         message = Message(from_=self.to,
                           to=self.from_,
                           type_=self.type_,
-                          body=mycommands.cmdcatalog[self.body]())
+                          body=mycommands.cmdcatalog[self.body](self))
         return message
     
 class Client(object):
@@ -87,12 +87,12 @@ class Client(object):
 
     def rawIn(self,data):
         """data is the input stanza"""
-        #print 'IN ', data
+        print 'IN ', data
         pass
 
     def rawOut(self,data):
         """data is the output stanza"""
-        #print 'OUT ', data
+        print 'OUT ', data
         pass
 
     def onDisconnected(self, xs):
