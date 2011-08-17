@@ -1,7 +1,6 @@
 """
 Module is an example of simple chat bot for any xmpp-server
 """
-
 import twisted.words.protocols.jabber.client as twisted_client
 from twisted.internet import threads, defer, reactor
 from twisted.words.protocols.jabber.xmlstream import XmlStreamFactory
@@ -19,7 +18,7 @@ from twilix.roster import Roster
 
 #modules with available commands for bot and command-parser 
 from plugins import mycommands
-from parser import myparser
+#from parser import myparser
 
 import ConfigParser
 from optparse import OptionParser
@@ -30,25 +29,24 @@ class XMPPClientConnector(SRVConnector):
         self.port = port
         SRVConnector.__init__(self, reactor, 'xmpp-client', 
                               domain, factory)
-
-class ChatMessage(Message):
-    """class describes handler for <chat> type stanzas"""
+                              
+"""class describes handler for <chat> type stanzas"""
+"""class ChatMessage(Message):
     def clean_body(self, value):
         cmd = myparser.parsingCommand(value)
         if cmd not in mycommands.cmdcatalog:
             cmd = mycommands.help
         return cmd
     
+    @defer.inlineCallbacks
     def chatHandler(self):
-        res = mycommands.cmdcatalog[self.body](self)
-        if isinstance(res, defer.Deferred):
-            return res
-        else:
-            message = Message(from_=self.to,
+        res = yield mycommands.cmdcatalog[self.body](self)
+        message = Message(from_=self.to,
                               to=self.from_,
                               type_=self.type_,
                               body=res)
-            return message
+        defer.returnValue(message)
+"""
     
 class Client(object):
     """main class for client to server connection"""
@@ -115,7 +113,8 @@ class Client(object):
         """
         
         self.dispatcher = Dispatcher(xs, self.client_jid)
-        self.dispatcher.registerHandler((ChatMessage, self))
+        #self.dispatcher.registerHandler((ChatMessage, self))
+        mycommands.register(self.dispatcher, self)
         
         self.disco = Disco(self.dispatcher)
         self.disco.init()
