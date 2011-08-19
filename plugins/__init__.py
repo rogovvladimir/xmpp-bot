@@ -1,8 +1,6 @@
 import os
 from twilix.stanzas import Message
-from twilix.base import WrongElement, DeclarativeFieldsMetaClass, BreakStanza
-
-from twisted.internet import defer
+from twilix.base import WrongElement, DeclarativeFieldsMetaClass
 
 commands = []
 
@@ -23,15 +21,6 @@ class BaseCommand(Message):
             raise WrongElement()
         self.cmdpars = cmd_check
         return value
-    
-    @defer.inlineCallbacks
-    def anyHandler(self):
-        result = yield self.commandHandler()
-        message = Message(from_=self.to,
-                          to=self.from_,
-                          type_=self.type_,
-                          body=result)
-        defer.returnValue ((message, BreakStanza()))
 
 def register(dispatcher, host):
     helpcommand = None
