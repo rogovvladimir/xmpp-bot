@@ -1,20 +1,13 @@
-from .mycommands import command
+import re
 
-from twilix.stanzas import Message
-from twilix.base import WrongElement, BreakStanza
+from . import BaseCommand
 
-@command('ping')
-class pingCommand(Message):
+class pingCommand(BaseCommand):
     
-    def clean_body(self, value):
-        if value != u'ping':
-            raise WrongElement()
-        return value
-        
-    def chatHandler(self):
-        return (Message(from_=self.to,
-                       to=self.from_,
-                       type_=self.type_,
-                       body=u'pong'), BreakStanza())
-
+    COMMAND = u'ping'
     HELP = u'check ur connection'
+    COMMAND_REGEX = re.compile(ur'^(ping)$')
+    
+    def commandHandler(self):
+        return u'pong'
+

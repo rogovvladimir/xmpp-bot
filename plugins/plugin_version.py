@@ -1,51 +1,44 @@
-from .mycommands import command
+import re
+
+from . import BaseCommand
 
 from twilix.jid import internJID, InvalidFormat
+from twilix.base import WrongElement
+#from twisted.internet import defer
 
-from twilix.stanzas import Message
-from twilix.base import WrongElement, BreakStanza
-
-from twisted.internet import defer
-
-@command('version')
-class versionCommand(Message):
+class versionCommand(BaseCommand):
+    
+    COMMAND = u'version'
+    HELP =  u"[with no parametrs, with 'me' parametr or any jabber id] \
+show version's info"
+    COMMAND_REGEX = re.compile(ur'^(version)(?: (me|.+))?$')
     
     def clean_body(self, value):
-        if not value.startswith(u'version'):
-            raise WrongElement()
-        jid = value[7:]
-        if not jid:
+        super(type(self), self).clean_body(value)
+        param = self.cmdpars.group(2)
+        if not param:
             self.jid = self.host.client_jid
-        elif jid == u' me':
+        elif param == u'me':
             self.jid = self.from_
-        elif jid.startswith(u' ') and jid[1:]:
-            try:
-                self.jid = internJID(jid[1:])
-            except InvalidFormat:
-                raise WrongElement()
         else:
-            raise WrongElement()
-        
+            try:
+                self.jid = internJID(param)
+            except InvalidFormat:
+                raise WrongElement
         return value
     
-    @defer.inlineCallbacks
-    def chatHandler(self):
+    #@defer.inlineCallbacks
+    def commandHandler(self):
         defr = self.host.version.getVersion(self.jid)
         defr.addCallback(makeMessage, self.jid)
         defr.addErrback(makeErrormessage, self.jid)
-        res = yield defr
-        message = Message(from_=self.to,
-                           to=self.from_,
-                           type_=self.type_,
-                           body=res)
-        defer.returnValue((message,BreakStanza()))
+        return defr
+        #res = yield defr
+        #defer.returnValue(res)
         
-    HELP =  u"[with no parametrs, with 'me' parametr or any jabber id] show version's info"
-
 def makeMessage(defr, jid):
-    res = u"%s client's information :\nname : %s \nversion : %s\nos : %s"\
-            % (jid,
-               defr.client_name, defr.client_version, defr.client_os)                       
+    res = u"%s client's information :\nname : %s \nversion : %s\nos \
+: %s"      % (jid,defr.client_name, defr.client_version, defr.client_os)                       
     return res
 
 def makeErrormessage(defr, jid):

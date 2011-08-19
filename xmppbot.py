@@ -16,9 +16,7 @@ from twilix.version import ClientVersion
 from twilix.disco import Disco
 from twilix.roster import Roster
 
-#modules with available commands for bot and command-parser 
-from plugins import mycommands
-#from parser import myparser
+import plugins
 
 import ConfigParser
 from optparse import OptionParser
@@ -113,8 +111,8 @@ class Client(object):
         """
         
         self.dispatcher = Dispatcher(xs, self.client_jid)
-        #self.dispatcher.registerHandler((ChatMessage, self))
-        mycommands.register(self.dispatcher, self)
+        #self.dispatcher.registerHandler((plugins.BaseCommand, self))
+        plugins.register(self.dispatcher, self)
         
         self.disco = Disco(self.dispatcher)
         self.disco.init()
