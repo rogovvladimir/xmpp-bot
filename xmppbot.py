@@ -15,6 +15,7 @@ from twilix.dispatcher import Dispatcher
 from twilix.version import ClientVersion
 from twilix.disco import Disco
 from twilix.roster import Roster
+from twilix.vcard import MyVCardQuery, VCard
 
 import plugins
 
@@ -27,25 +28,7 @@ class XMPPClientConnector(SRVConnector):
         self.port = port
         SRVConnector.__init__(self, reactor, 'xmpp-client', 
                               domain, factory)
-                              
-"""class describes handler for <chat> type stanzas"""
-"""class ChatMessage(Message):
-    def clean_body(self, value):
-        cmd = myparser.parsingCommand(value)
-        if cmd not in mycommands.cmdcatalog:
-            cmd = mycommands.help
-        return cmd
-    
-    @defer.inlineCallbacks
-    def chatHandler(self):
-        res = yield mycommands.cmdcatalog[self.body](self)
-        message = Message(from_=self.to,
-                              to=self.from_,
-                              type_=self.type_,
-                              body=res)
-        defer.returnValue(message)
-"""
-    
+                                  
 class Client(object):
     """main class for client to server connection"""
 
@@ -87,12 +70,10 @@ class Client(object):
 
     def rawIn(self,data):
         """data is the input stanza"""
-        #print 'IN ', data
         pass
 
     def rawOut(self,data):
         """data is the output stanza"""
-        #print 'OUT ', data
         pass
 
     def onDisconnected(self, xs):
@@ -111,7 +92,6 @@ class Client(object):
         """
         
         self.dispatcher = Dispatcher(xs, self.client_jid)
-        #self.dispatcher.registerHandler((plugins.BaseCommand, self))
         plugins.register(self.dispatcher, self)
         
         self.disco = Disco(self.dispatcher)
