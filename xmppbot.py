@@ -16,6 +16,7 @@ from twilix.version import ClientVersion
 from twilix.disco import Disco
 from twilix.roster import Roster
 from twilix.vcard import MyVCardQuery, VCard
+from twilix.muc import connection, UserPresence
 
 import plugins
 
@@ -70,10 +71,12 @@ class Client(object):
 
     def rawIn(self,data):
         """data is the input stanza"""
+        #print '\nIN ', data
         pass
 
     def rawOut(self,data):
         """data is the output stanza"""
+        #print 'OUT ', data
         pass
 
     def onDisconnected(self, xs):
@@ -115,6 +118,10 @@ class Client(object):
                            self.roster.resource_available)
         dispatcher.connect(self.onUnvailable, 
                            self.roster.resource_unavailable)
+        
+        connection(self.dispatcher, self.client_jid)
+        self.dispatcher.registerHandler((UserPresence, self))
+                        
         
     def onInitFailed(self, xs):
         """

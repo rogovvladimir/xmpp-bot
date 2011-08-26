@@ -3,7 +3,7 @@ import re
 from . import BaseCommand
 
 from twilix.jid import internJID, InvalidFormat
-from twilix.base import WrongElement, BreakStanza
+from twilix.base import WrongElement
 from twisted.internet import defer
 
 class versionCommand(BaseCommand):
@@ -26,16 +26,14 @@ show version's info"
             except InvalidFormat:
                 raise WrongElement
         return value
-    
+        
     @defer.inlineCallbacks
-    def chatHandler(self):
+    def commandHandler(self):
         defr = self.host.version.getVersion(self.jid)
         defr.addCallback(makeMessage, self.jid)
         defr.addErrback(makeErrormessage, self.jid)
         res = yield defr
-        reply = self.get_reply()
-        reply.body = res
-        defer.returnValue((reply, BreakStanza()))
+        defer.returnValue(self.makeReply(res))
         
 def makeMessage(defr, jid):
     res = u"%s client's information :\nname : %s \nversion : %s\nos \

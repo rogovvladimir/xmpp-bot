@@ -3,7 +3,6 @@ from time import localtime, strftime
 
 from . import BaseCommand
 
-from twilix.base import BreakStanza
 
 class timeCommand(BaseCommand):
 
@@ -11,8 +10,7 @@ class timeCommand(BaseCommand):
     HELP = u'show ur time'
     COMMAND_REGEX = re.compile(ur'^(time)$')
         
-    def chatHandler(self):
+    def commandHandler(self):
         res = strftime(u"%a, %d %b %Y, %H:%M:%S", localtime())
-        reply = self.get_reply()
-        reply.body = res
-        return (reply, BreakStanza())
+        return self.makeReply(res)
+        
