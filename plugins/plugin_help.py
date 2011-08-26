@@ -11,7 +11,7 @@ class helpCommand(BaseCommand):
     COMMAND_REGEX = re.compile(ur'^(?:help)?(.*)$')
     
     def commandHandler(self):
-        if self.cmdpars.group(1) or getattr(self, 'delay', None):
+        if self.type_ == 'groupchat' and self.cmdpars.group(1):
             reply = (EmptyStanza(), BreakStanza())
         else:
             res = u''

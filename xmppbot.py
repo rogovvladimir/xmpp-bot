@@ -16,7 +16,7 @@ from twilix.version import ClientVersion
 from twilix.disco import Disco
 from twilix.roster import Roster
 from twilix.vcard import MyVCardQuery, VCard
-from twilix.muc import connection, UserPresence
+from twilix.muc.muc import MultiChat
 
 import plugins
 
@@ -119,8 +119,9 @@ class Client(object):
         dispatcher.connect(self.onUnvailable, 
                            self.roster.resource_unavailable)
         
-        connection(self.dispatcher, self.client_jid)
-        self.dispatcher.registerHandler((UserPresence, self))
+        self.muc = MultiChat(self.dispatcher, self.client_jid)
+        self.muc.init()
+        self.muc.enter_room()
                         
         
     def onInitFailed(self, xs):
