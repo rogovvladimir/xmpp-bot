@@ -1,13 +1,10 @@
 import os
 from twilix.stanzas import Message
+from twilix.muc.delay import Delay
 from twilix import fields
-from twilix.base import WrongElement, DeclarativeFieldsMetaClass, BreakStanza, EmptyStanza, VElement
+from twilix.base import WrongElement, DeclarativeFieldsMetaClass, BreakStanza, EmptyStanza
 
 commands = []
-
-class Delay(VElement):
-    elementName = 'delay'
-    #elementUri = 'http://jabber.org/protocol/muc#user'
 
 class MetaCommand(DeclarativeFieldsMetaClass):
     def __init__(cls, name, bases, dct):
@@ -30,15 +27,18 @@ class BaseCommand(Message):
         return value
         
     def makeReply(self, res):
-        reply = self.get_reply()
-        reply.body = res
-        if self.type_ == 'groupchat':
-            reply.to = reply.to.bare()
+        if res is None:
+            reply = EmptyStanza()
+        else:
+            reply = self.get_reply()
+            reply.body = res
+            if self.type_ == 'groupchat':
+                reply.to = reply.to.bare()
         return (reply, BreakStanza())
     
     def anyHandler(self):
         if self.delay is not None:
-            return (EmptyStanza(), BreakStanza())
+            return self.makeReply(None)
         else:
             return self.commandHandler()
 

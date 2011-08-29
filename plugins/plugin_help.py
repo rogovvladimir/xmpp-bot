@@ -2,8 +2,6 @@ import re
 
 from . import BaseCommand, commands
 
-from twilix.base import EmptyStanza, BreakStanza
-
 class helpCommand(BaseCommand):
        
     COMMAND = u'help'
@@ -12,7 +10,7 @@ class helpCommand(BaseCommand):
     
     def commandHandler(self):
         if self.type_ == 'groupchat' and self.cmdpars.group(1):
-            reply = (EmptyStanza(), BreakStanza())
+            res = None
         else:
             res = u''
             cmnd = self.cmdpars.group(1)
@@ -27,6 +25,6 @@ commands, supported by this bot' % \
                                         '\n\t'.join(['[%s] -- %s;' % \
                                                 (cmd, helpdict[cmd]) \
                                            for cmd in sorted(helpdict)])
-            reply = self.makeReply(res)
+        reply = self.makeReply(res)
         return reply
     

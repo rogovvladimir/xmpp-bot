@@ -121,7 +121,7 @@ class Client(object):
         
         self.muc = MultiChat(self.dispatcher, self.client_jid)
         self.muc.init()
-        self.muc.enter_room()
+        self.muc.enter_room(status='help')
                         
         
     def onInitFailed(self, xs):
