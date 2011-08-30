@@ -119,9 +119,11 @@ class Client(object):
         dispatcher.connect(self.onUnvailable, 
                            self.roster.resource_unavailable)
         
-        self.muc = MultiChat(self.dispatcher, self.client_jid)
+        self.muc = MultiChat(self.dispatcher)
         self.muc.init()
         self.muc.enter_room(status='help')
+        self.muc.enter_room(room_jid='vis2@conference.jabber.ru', nickname='noxyu', status='faka')
+        #self.muc.leave_room()
                         
         
     def onInitFailed(self, xs):

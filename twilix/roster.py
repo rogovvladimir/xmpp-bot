@@ -6,6 +6,9 @@ from twilix.base import WrongElement, VElement
 from twilix import fields
 
 class RosterItem(VElement):
+    """
+    Entity for xml roster item
+    """
     elementName = 'item'
     elementUri = 'jabber:iq:roster'
 

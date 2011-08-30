@@ -38,8 +38,11 @@ class User(object):
         self.role = role
         self.affiliation = affiliation
         
-    def __repr__(self):
+    def __unicode__(self):
         return unicode(self.__dict__)
+    
+    def __repr__(self):
+        return self.__unicode__()
 
 class UserPresence(Presence):
     """Class for multi chat occupant's info"""
@@ -47,14 +50,16 @@ class UserPresence(Presence):
     
     def anyHandler(self):
         """
-        Saves list of info about active users in room
+        Saves list of info about active users in rooms
         """
         user = User(self.from_.resource, 
                     self.user.item.role,
                     self.user.item.affiliation)
         
+        room_jid = self.from_.bare()
+        
                     
         if self.type_ == 'unavailable':
-            self.host.userroster = filter(lambda el: el.nick != user.nick, self.host.userroster)
+            self.host.roster[room_jid] = filter(lambda el: el.nick != user.nick, self.host.roster[room_jid])
         else:
-            self.host.userroster.append(user)
+            self.host.roster[room_jid].append(user)
