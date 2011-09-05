@@ -16,7 +16,7 @@ from twilix.version import ClientVersion
 from twilix.disco import Disco
 from twilix.roster import Roster
 from twilix.vcard import MyVCardQuery, VCard
-from twilix.muc.muc import MultiChat
+from twilix.muc import MultiChat
 
 import plugins
 
@@ -71,12 +71,12 @@ class Client(object):
 
     def rawIn(self,data):
         """data is the input stanza"""
-        #print '\nIN ', data
+        print '\nIN ', data
         pass
 
     def rawOut(self,data):
         """data is the output stanza"""
-        #print 'OUT ', data
+        print 'OUT ', data
         pass
 
     def onDisconnected(self, xs):
@@ -100,12 +100,12 @@ class Client(object):
         self.disco = Disco(self.dispatcher)
         self.disco.init()
         
-        p = Presence(status="I'm ur bot")
+        p = Presence(status="I'm bot. Enter 'help'")
         self.roster = Roster(self.dispatcher, p)
         self.roster.init()
         
         self.version = ClientVersion(self.dispatcher, 
-                                     "Xmppbot Prime. Optimus's brother",
+                                     "Xmppbot.",
                                      'v%s' % version, 'Linux')
         self.version.init(self.disco)
         
@@ -121,10 +121,28 @@ class Client(object):
         
         self.muc = MultiChat(self.dispatcher)
         self.muc.init()
-        self.muc.enter_room(status='help')
-        self.muc.enter_room(room_jid='vis2@conference.jabber.ru', nickname='noxyu', status='faka')
-        #self.muc.leave_room()
+        
+        dispatcher.connect(self.onUserOnline, 
+                           self.muc.user_available)
+        dispatcher.connect(self.onUserOffline, 
+                           self.muc.user_unavailable)  
+        
+        #print 'PRESENCE', Presence.attributesProps.items()
+        
+        self.muc.enter_room(presence=p)
+        #self.muc.leave_room(presence=p)
+        #self.muc.enter_room(presence=p)
+        #self.muc.enter_room(room_jid='vis2@conference.jabber.ru', nickname='noxyu', presence=p)
+        #self.muc.leave_room(presence=q)
                         
+        
+    def onUserOnline(self, user):
+        #print 'AVAILABLE:', unicode(user)
+        pass
+        
+    def onUserOffline(self, user):
+        #print 'UNAVAILABLE:', unicode(user)
+        pass
         
     def onInitFailed(self, xs):
         """

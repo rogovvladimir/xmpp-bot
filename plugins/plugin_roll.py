@@ -13,6 +13,10 @@ class rollCommand(BaseCommand):
         param = self.cmdpars.group(2)
         self.bound = int(param) if param else 6
         res = randint(1, self.bound)
+        
+        self.host.muc.set_role(reason='go down', role='visitor')
+        self.host.muc.set_affiliation(reason='you sucks', affiliation='none')
+        
         return self.makeReply(res)
     
     
