@@ -9,7 +9,7 @@ from twisted.names.srvconnect import SRVConnector
 from pydispatch import dispatcher
 
 from twilix.stanzas import Message, Iq, Presence
-from twilix.base import WrongElement
+from twilix.base.exceptions import WrongElement
 from twilix.jid import internJID
 from twilix.dispatcher import Dispatcher
 from twilix.version import ClientVersion

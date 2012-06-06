@@ -3,7 +3,7 @@ from time import localtime, strftime
 
 from . import BaseCommand
 
-from twilix.base import BreakStanza
+from twilix.base.myelement import BreakStanza
 
 class timeCommand(BaseCommand):
 

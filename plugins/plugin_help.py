@@ -2,7 +2,7 @@ import re
 
 from . import BaseCommand, commands
 
-from twilix.base import BreakStanza
+from twilix.base.myelement import BreakStanza
 
 class helpCommand(BaseCommand):
        

@@ -3,7 +3,8 @@ import re
 from . import BaseCommand
 
 from twilix.jid import internJID, InvalidFormat
-from twilix.base import WrongElement, BreakStanza
+from twilix.base.exceptions import WrongElement
+from twilix.base.myelement import BreakStanza
 from twisted.internet import defer
 
 class versionCommand(BaseCommand):

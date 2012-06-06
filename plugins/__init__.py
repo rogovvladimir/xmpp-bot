@@ -1,6 +1,7 @@
 import os
 from twilix.stanzas import Message
-from twilix.base import WrongElement, DeclarativeFieldsMetaClass
+from twilix.base.exceptions import WrongElement
+from twilix.base.velement import DeclarativeFieldsMetaClass
 
 commands = []
 

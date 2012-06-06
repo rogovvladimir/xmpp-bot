@@ -3,7 +3,7 @@ from random import randint
 
 from . import BaseCommand
 
-from twilix.base import BreakStanza
+from twilix.base.myelement import BreakStanza
 
 class rollCommand(BaseCommand):
     
