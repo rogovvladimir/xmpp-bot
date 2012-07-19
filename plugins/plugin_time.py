@@ -16,3 +16,10 @@ class timeCommand(BaseCommand):
         reply = self.get_reply()
         reply.body = res
         return (reply, BreakStanza())
+    
+    def groupchatHandler(self):
+        res = strftime(u"%a, %d %b %Y, %H:%M:%S", localtime())
+        reply = self.get_reply()
+        reply.body = u'%s: %s' %(reply.to.resource, res)
+        reply.to = reply.to.bare()
+        return (reply, BreakStanza())

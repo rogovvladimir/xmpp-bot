@@ -28,3 +28,21 @@ commands, supported by this bot' % \
         reply.body = res
         return (reply, BreakStanza())
     
+    def groupchatHandler(self):
+        res = u''
+        cmnd = self.cmdpars.group(1)
+        if cmnd:
+            return BreakStanza()
+        helpdict = {}
+        for cmd in commands:
+            helpdict[cmd.COMMAND] = getattr(cmd, 'HELP', 
+                                    u"(haven't help for this command)")
+        res += u'\nThere are :\n\t%s\nlist of \
+commands, supported by this bot' % \
+                                        '\n\t'.join(['[%s] -- %s;' % \
+                                                (cmd, helpdict[cmd]) \
+                                           for cmd in sorted(helpdict)])
+        reply = self.get_reply()
+        reply.body = u'%s: %s' %(reply.to.resource, res)
+        reply.to = reply.to.bare()
+        return (reply, BreakStanza())

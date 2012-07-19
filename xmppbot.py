@@ -97,12 +97,12 @@ class Client(object):
         self.disco = Disco(self.dispatcher)
         self.disco.init()
         
-        p = Presence(status="I'm ur bot")
+        p = Presence(status="Use me plz!")
         self.roster = Roster(self.dispatcher, p)
         self.roster.init()
         
         self.version = ClientVersion(self.dispatcher, 
-                                     "Xmppbot Prime. Optimus's brother",
+                                     "XmppBot", 
                                      'v%s' % version, 'Linux')
         self.version.init(self.disco)
         

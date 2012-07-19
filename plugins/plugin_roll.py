@@ -19,4 +19,11 @@ class rollCommand(BaseCommand):
         reply.body = res
         return (reply, BreakStanza())
     
-    
+    def groupchatHandler(self):
+        param = self.cmdpars.group(2)
+        self.bound = int(param) if param else 6
+        res = randint(1, self.bound)
+        reply = self.get_reply()
+        reply.body = u'%s: %s' %(reply.to.resource, res)
+        reply.to = reply.to.bare()
+        return (reply, BreakStanza())

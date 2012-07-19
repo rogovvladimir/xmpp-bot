@@ -15,4 +15,11 @@ class pingCommand(BaseCommand):
         reply = self.get_reply()
         reply.body = res
         return (reply, BreakStanza())
+    
+    def groupchatHandler(self):
+        res = u'pong'
+        reply = self.get_reply()
+        reply.body = u'%s: %s' %(reply.to.resource, res)
+        reply.to = reply.to.bare()
+        return (reply, BreakStanza()) 
 

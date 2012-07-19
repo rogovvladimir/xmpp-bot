@@ -37,7 +37,18 @@ show version's info"
         reply = self.get_reply()
         reply.body = res
         defer.returnValue((reply, BreakStanza()))
-        
+    
+    @defer.inlineCallbacks
+    def groupchatHandler(self):
+        defr = self.host.version.getVersion(self.jid)
+        defr.addCallback(makeMessage, self.jid)
+        defr.addErrback(makeErrormessage, self.jid)
+        res = yield defr
+        reply = self.get_reply()
+        reply.body = u'%s: %s' %(reply.to.resource, res)
+        reply.to = reply.to.bare()
+        defer.returnValue((reply, BreakStanza()))
+    
 def makeMessage(defr, jid):
     res = u"%s client's information :\nname : %s \nversion : %s\nos \
 : %s"      % (jid,defr.client_name, defr.client_version, defr.client_os)                       
